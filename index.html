@@ -1,15 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>My First Page</title>
-</head>
-<body>
+Steps to implement Docker (short & clear)
+1️1. Create Dockerfile (no extension)
+Paste:
+FROM nginx:alpine
+COPY . /usr/share/nginx/html
 
-    <h1>Welcome to My Website</h1>
-    <p>This is a paragraph of text explaining what this page is about.</p>
-    
-    <a href="https://www.google.com">Click here to visit Google</a>
+2️. Open terminal in project folder
+(Make sure Docker Desktop is running)
 
-</body>
-</html>
+3️ Build Docker image
+docker build -t bio-data-app .
+
+4️ Verify image created
+docker images
+ OR check in Docker Desktop → Images tab
+
+5️ (Optional) Run container
+docker run -d -p 8080:80 bio-data-app
+docker ps - gives all the detiials of the images created
+
+KUBERNETEES:
+
+1.Enable kubernetees
+2.create deployment.yaml(paste the code)
+3. Create service.yaml(paste the code)
+4. Apply files
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+5. Check Pods
+kubectl get pods- it should show running
+6.check service
+kubectl get svcit should should nodeport
+7.check dockerdesktop the containers
+
