@@ -1,0 +1,462 @@
+Alright — here is the **CORRECT, COMPLETE, FINAL VERSION** of your project from **start → Git → Docker → Kubernetes → Jenkins**, including **all fixes and missing steps**.
+This is exactly what you can follow for **submission + viva**.
+
+---
+
+#  FULL IMPLEMENTATION (STEP BY STEP)
+
+---
+
+#  PART 1: PROJECT SETUP (HTML)
+
+##  Step 1: Create Folder
+
+Create folder:
+
+```
+university-dept-website
+```
+
+---
+
+##  Step 2: Open in VS Code
+
+* Open **VS Code**
+* File → Open Folder → Select your folder
+
+---
+
+## Step 3: Create `index.html`
+
+Paste this (final clean version):
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>University Department</title>
+</head>
+<body>
+
+<header>
+    <h1>XYZ University</h1>
+    <p>XYZ University is known for excellence in education and research.</p>
+    <h3>Administrative Heads</h3>
+    <p>Vice Chancellor: Dr. ABC</p>
+    <p>Dean: Dr. DEF</p>
+</header>
+
+<hr>
+
+<section>
+    <h2>About Computer Science Department</h2>
+    <p>The department focuses on modern technologies and innovation.</p>
+</section>
+
+<hr>
+
+<section>
+    <h2>Courses Offered</h2>
+    <ul>
+        <li>Data Structures - Data organization</li>
+        <li>Operating Systems - OS concepts</li>
+        <li>Database Systems - Data management</li>
+    </ul>
+</section>
+
+<hr>
+
+<section>
+    <h2>Faculty</h2>
+    <p>Dr. X - AI</p>
+    <p>Dr. Y - DBMS</p>
+</section>
+
+<hr>
+
+<section>
+    <h2>Contact</h2>
+    <p>Address: Vellore, Tamil Nadu</p>
+    <p>Phone: 9876543210</p>
+    <p>Email: cs@xyz.edu</p>
+</section>
+
+<hr>
+
+<footer>
+    <p>© 2026 XYZ University</p>
+</footer>
+
+</body>
+</html>
+```
+
+---
+
+#  PART 2: GITHUB
+
+##  Step 4: Create Repo in GitHub
+
+Repo name:
+
+```
+university-dept-website
+```
+
+---
+
+##  Step 5: Push Code
+
+Open terminal:
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+```
+
+---
+
+##  Step 6: Connect Remote
+
+```bash
+git remote add origin https://github.com/YOUR-USERNAME/university-dept-website.git
+git branch -M main
+git push -u origin main
+```
+
+---
+
+##  Step 7: Clone (as required)
+
+```bash
+git clone https://github.com/YOUR-USERNAME/university-dept-website.git
+cd university-dept-website
+```
+
+---
+
+## Step 8: Update → Commit → Push
+
+```bash
+git add .
+git commit -m "updated"
+git push
+```
+
+---
+
+# PART 3: DOCKER (FINAL CORRECT)
+
+##  Steps to implement Docker (short & clear)
+
+---
+
+### 1️. Create Dockerfile (no extension)
+
+```dockerfile
+FROM nginx:alpine
+COPY . /usr/share/nginx/html
+```
+
+---
+
+### EXTRA FIX (IMPORTANT): Create `.dockerignore`
+
+```
+.git
+Dockerfile
+```
+ Prevents unwanted files inside image
+
+---
+
+###. Open terminal in project folder
+
+👉 Ensure **Docker Desktop** is running
+
+---
+
+###  Build Docker image
+
+```bash
+docker build -t university-app .
+```
+
+---
+
+###  Verify image
+
+```bash
+docker images
+```
+
+---
+###  Run container
+
+```bash
+docker run -d -p 8080:80 university-app
+docker ps
+```
+
+ Open:
+
+```
+http://localhost:8080
+```
+
+---
+
+### EXTRA FIX (VERY IMPORTANT): Push to DockerHub
+
+ Kubernetes **cannot always use local image**
+
+```bash
+docker login
+docker tag university-app your-dockerhub-username/university-app
+docker push your-dockerhub-username/university-app
+```
+
+---
+
+#  PART 4: KUBERNETES (FINAL CORRECT)
+
+---
+
+##  KUBERNETES:
+
+---
+
+### 1. Enable Kubernetes
+
+* Open Docker Desktop
+* Settings → Kubernetes → Enable
+
+---
+
+### 2. Check context (FIX)
+
+```bash
+kubectl config current-context
+```
+
+ Must show:
+
+```
+docker-desktop
+```
+
+---
+
+### 3. Create `deployment.yaml`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: university-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: university
+  template:
+    metadata:
+      labels:
+        app: university
+    spec:
+      containers:
+      - name: university-container
+        image: your-dockerhub-username/university-app
+        ports:
+        - containerPort: 80
+```
+
+---
+
+### 4. Create `service.yaml`
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: university-service
+spec:
+  type: NodePort
+  selector:
+    app: university
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30007
+```
+
+---
+
+### 5. Apply files
+
+```bash
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+```
+
+---
+
+### 6. Check Pods
+
+```bash
+kubectl get pods
+```
+
+---
+
+### 7. Check Deployment (FIX)
+
+```bash
+kubectl get deployments
+```
+
+---
+
+### 8. Check Service
+
+```bash
+kubectl get svc
+```
+
+---
+
+### 9. Open in browser
+
+```
+http://localhost:30007
+```
+
+---
+
+###  If not working (FIX)
+
+```bash
+kubectl port-forward service/university-service 8082:80
+```
+
+Open:
+
+```
+http://localhost:8082
+```
+
+---
+
+#  PART 5: JENKINS (FINAL CORRECT)
+
+
+##  Step : Open Jenkins
+
+```
+http://localhost:8080
+```
+
+Unlock using password
+
+---
+
+##  Step 3: Install Plugins
+
+* Suggested plugins
+* Docker Pipeline
+* Kubernetes CLI
+
+---
+
+##  Step 4: Add GitHub Credentials
+
+---
+##  Step 5: Create Pipeline
+
+Name:
+
+```
+university-pipeline
+```
+
+---
+
+## Step 6: FINAL PIPELINE SCRIPT (FIXED)
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Clone') {
+            steps {
+                git 'https://github.com/YOUR-USERNAME/university-dept-website.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t university-app .'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                bat 'docker rm -f university-container || true'
+                bat 'docker run -d -p 8081:80 --name university-container university-app'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                bat 'kubectl apply -f deployment.yaml'
+                bat 'kubectl apply -f service.yaml'
+            }
+        }
+    }
+}
+```
+
+---
+
+# FINAL PROJECT STRUCTURE
+
+```
+university-dept-website/
+│
+├── index.html
+├── Dockerfile
+├── .dockerignore
+├── deployment.yaml
+├── service.yaml
+```
+
+---
+
+#  FINAL VERIFICATION (DON’T SKIP)
+
+Run:
+
+```bash
+docker images
+docker ps
+kubectl get pods
+kubectl get svc
+kubectl get deployments
+```
+
+---
+
+# FINAL RESULT
+
+✔ Website created
+✔ Code pushed to GitHub
+✔ Docker image built + pushed
+✔ Kubernetes deployed
+✔ Jenkins automated
+
+---
+
+
